@@ -1,19 +1,15 @@
 class Solution:
     def maxSubarrayLength(self, nums: List[int], k: int) -> int:
-        positions = {}
+        count = {}
         left = 0
         ans = 0
 
         for right in range(len(nums)):
-            x = nums[right]
+            count[nums[right]] = count.get(nums[right], 0) + 1
 
-            if x not in positions:
-                positions[x] = []
-
-            positions[x].append(right)
-
-            if len(positions[x]) > k:
-                left = positions[x][-k - 1] + 1
+            while count[nums[right]] > k:
+                count[nums[left]] -= 1
+                left += 1
 
             ans = max(ans, right - left + 1)
 
