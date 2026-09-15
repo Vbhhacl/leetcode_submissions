@@ -1,24 +1,22 @@
 class Solution:
     def maxPalindromes(self, s: str, k: int) -> int:
-        n = len(s)
-        dp = [0] * n
+        ans = 0
+        last_end = -1  # Index of the last character of the last selected palindrome
         
-        for i in range(n):
-            if i > 0:
-                dp[i] = dp[i - 1]
+        for i in range(len(s)):
+            # 1. Check window of length k ending at index i
+            if i - k + 1 > last_end:
+                sub = s[i - k + 1 : i + 1]
+                if sub == sub[::-1]:
+                    ans += 1
+                    last_end = i
+                    continue  # Move to next index since this character is consumed
             
-            # Check palindrome of length k ending at index i
-            if i - k + 1 >= 0:
-                sub1 = s[i - k + 1 : i + 1]
-                if sub1 == sub1[::-1]:
-                    prev = dp[i - k] if i - k >= 0 else 0
-                    dp[i] = max(dp[i], prev + 1)
-            
-            # Check palindrome of length k + 1 ending at index i
-            if i - k >= 0:
-                sub2 = s[i - k : i + 1]
-                if sub2 == sub2[::-1]:
-                    prev = dp[i - k - 1] if i - k - 1 >= 0 else 0
-                    dp[i] = max(dp[i], prev + 1)
+            # 2. Check window of length k + 1 ending at index i
+            if i - k > last_end:
+                sub = s[i - k : i + 1]
+                if sub == sub[::-1]:
+                    ans += 1
+                    last_end = i
                     
-        return dp[-1] if n > 0 else 0
+        return ans
